@@ -45,13 +45,11 @@ def handler(job):
         gpu_id=None)
 
     # Download input objects
-    image_file_path = rp_download.download_input_objects(
-        [validated_input.get('image_url', None)]
-    )  # pylint: disable=unbalanced-tuple-unpacking
-    image = image_file_path[0]
+    remote_file = rp_download.file(validated_input.get('image_url', None))
+    image_path = remote_file["file_path"]
 
-    imgname, extension = os.path.splitext(os.path.basename(image))
-    img = cv2.imread(image, cv2.IMREAD_UNCHANGED)
+    imgname, extension = os.path.splitext(os.path.basename(image_path))
+    img = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
     if len(img.shape) == 3 and img.shape[2] == 4:
         img_mode = 'RGBA'
     else:
